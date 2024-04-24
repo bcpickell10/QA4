@@ -12,7 +12,9 @@ class InventoryManagementApp:
         self.inventory = {
             "Tomatoes": {"quantity": 100, "batch": "Batch 001", "purchase_date": "2024-04-24", "expiry_date": "2024-05-15", "upc": "123456789012"},
             "Apples": {"quantity": 80, "batch": "Batch 002", "purchase_date": "2024-04-20", "expiry_date": "2024-05-10", "upc": "123456789013"},
-            "Lettuce": {"quantity": 50, "batch": "Batch 001", "purchase_date": "2024-04-22", "expiry_date": "2024-05-12", "upc": "123456789014"}
+            "Lettuce": {"quantity": 50, "batch": "Batch 001", "purchase_date": "2024-04-22", "expiry_date": "2024-05-12", "upc": "123456789014"},
+            "Carrots": {"quantity": 70, "batch": "Batch 002", "purchase_date": "2024-04-22", "expiry_date": "2024-05-14", "upc": "123456789015"},
+            "Potatoes": {"quantity": 90, "batch": "Batch 003", "purchase_date": "2024-04-23", "expiry_date": "2024-05-17", "upc": "123456789016"}
         }
         
         # Sales data
