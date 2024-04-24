@@ -17,9 +17,9 @@ class InventoryManagementApp:
         
         # Sales data
         self.sales = {
-            "Tomatoes": {"quantity_sold": 0, "price": 2.5},
-            "Apples": {"quantity_sold": 0, "price": 1.75},
-            "Lettuce": {"quantity_sold": 0, "price": 3.0}
+            "Tomatoes": {"quantity_sold": 20, "price": 2.5},
+            "Apples": {"quantity_sold": 15, "price": 1.75},
+            "Lettuce": {"quantity_sold": 10, "price": 3.0}
         }
 
         # Create notebook
@@ -187,7 +187,7 @@ class InventoryManagementApp:
 
         # Inserting crop processing and shipment data into the treeview
         for product, data in self.inventory.items():
-            self.crop_shipment_tree.insert("", "end", text=product, values=(data["batch"], data["quantity"], "", "", "", ""))
+            self.crop_shipment_tree.insert("", "end", text=product, values=(data["batch"], data["quantity"], "New York", "2024-05-01", "2024-05-15", 2.0))
         
         self.crop_shipment_tree.pack(expand=True, fill="both")
 
@@ -261,7 +261,6 @@ class InventoryManagementApp:
                 messagebox.showerror("Error", f"{product} not found in inventory.")
         else:
             messagebox.showerror("Error", "Please fill in all the fields.")
-
 
 def main():
     root = tk.Tk()
