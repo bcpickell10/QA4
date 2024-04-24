@@ -26,8 +26,10 @@ class InventoryManagementApp:
         self.notebook = ttk.Notebook(self.root)
         self.tab1 = ttk.Frame(self.notebook)
         self.tab2 = ttk.Frame(self.notebook)
+        self.tab3 = ttk.Frame(self.notebook)
         self.notebook.add(self.tab1, text="Inventory")
         self.notebook.add(self.tab2, text="Sales & Supply Data")
+        self.notebook.add(self.tab3, text="Crop Processing & Shipment")
         self.notebook.pack(expand=1, fill="both")
 
         # Tab 1: Inventory Management
@@ -35,6 +37,9 @@ class InventoryManagementApp:
 
         # Tab 2: Sales & Supply Data
         self.create_sales_supply_tab()
+        
+        # Tab 3: Crop Processing & Shipment
+        self.create_crop_processing_shipment_tab()
         
     def create_inventory_tab(self):
         # Treeview for inventory
@@ -164,6 +169,94 @@ class InventoryManagementApp:
                     messagebox.showinfo("Success", f"{quantity_sold} {product}(s) sold.")
                 else:
                     messagebox.showerror("Error", f"Not enough {product} in inventory.")
+            else:
+                messagebox.showerror("Error", f"{product} not found in inventory.")
+        else:
+            messagebox.showerror("Error", "Please fill in all the fields.")
+
+    def create_crop_processing_shipment_tab(self):
+        # Treeview for crop processing and shipment
+        self.crop_shipment_tree = ttk.Treeview(self.tab3, columns=("Batch", "Total Quantity", "Shipment Location", "Shipment Date", "Sell by Date", "Price"))
+        self.crop_shipment_tree.heading("#0", text="Product")
+        self.crop_shipment_tree.heading("Batch", text="Batch")
+        self.crop_shipment_tree.heading("Total Quantity", text="Total Quantity")
+        self.crop_shipment_tree.heading("Shipment Location", text="Shipment Location")
+        self.crop_shipment_tree.heading("Shipment Date", text="Shipment Date")
+        self.crop_shipment_tree.heading("Sell by Date", text="Sell by Date")
+        self.crop_shipment_tree.heading("Price", text="Price")
+
+        # Inserting crop processing and shipment data into the treeview
+        for product, data in self.inventory.items():
+            self.crop_shipment_tree.insert("", "end", text=product, values=(data["batch"], data["quantity"], "", "", "", ""))
+        
+        self.crop_shipment_tree.pack(expand=True, fill="both")
+
+        # Frame for actions
+        action_frame = tk.Frame(self.tab3)
+        action_frame.pack(pady=10)
+
+        # Labels and Entry fields
+        self.product_label_shipment = tk.Label(action_frame, text="Product:")
+        self.product_label_shipment.grid(row=0, column=0, padx=5, pady=5)
+        self.product_var_shipment = tk.StringVar()
+        self.product_entry_shipment = tk.Entry(action_frame, textvariable=self.product_var_shipment)
+        self.product_entry_shipment.grid(row=0, column=1, padx=5, pady=5)
+
+        self.batch_label_shipment = tk.Label(action_frame, text="Batch:")
+        self.batch_label_shipment.grid(row=0, column=2, padx=5, pady=5)
+        self.batch_var_shipment = tk.StringVar()
+        self.batch_entry_shipment = tk.Entry(action_frame, textvariable=self.batch_var_shipment)
+        self.batch_entry_shipment.grid(row=0, column=3, padx=5, pady=5)
+
+        self.total_quantity_label = tk.Label(action_frame, text="Total Quantity:")
+        self.total_quantity_label.grid(row=1, column=0, padx=5, pady=5)
+        self.total_quantity_var = tk.IntVar()
+        self.total_quantity_entry = tk.Entry(action_frame, textvariable=self.total_quantity_var)
+        self.total_quantity_entry.grid(row=1, column=1, padx=5, pady=5)
+
+        self.shipment_location_label = tk.Label(action_frame, text="Shipment Location:")
+        self.shipment_location_label.grid(row=1, column=2, padx=5, pady=5)
+        self.shipment_location_var = tk.StringVar()
+        self.shipment_location_entry = tk.Entry(action_frame, textvariable=self.shipment_location_var)
+        self.shipment_location_entry.grid(row=1, column=3, padx=5, pady=5)
+
+        self.shipment_date_label = tk.Label(action_frame, text="Shipment Date (YYYY-MM-DD):")
+        self.shipment_date_label.grid(row=2, column=0, padx=5, pady=5)
+        self.shipment_date_var = tk.StringVar()
+        self.shipment_date_entry = tk.Entry(action_frame, textvariable=self.shipment_date_var)
+        self.shipment_date_entry.grid(row=2, column=1, padx=5, pady=5)
+
+        self.sell_by_date_label = tk.Label(action_frame, text="Sell by Date (YYYY-MM-DD):")
+        self.sell_by_date_label.grid(row=2, column=2, padx=5, pady=5)
+        self.sell_by_date_var = tk.StringVar()
+        self.sell_by_date_entry = tk.Entry(action_frame, textvariable=self.sell_by_date_var)
+        self.sell_by_date_entry.grid(row=2, column=3, padx=5, pady=5)
+
+        self.price_label = tk.Label(action_frame, text="Price:")
+        self.price_label.grid(row=3, column=0, padx=5, pady=5)
+        self.price_var = tk.DoubleVar()
+        self.price_entry = tk.Entry(action_frame, textvariable=self.price_var)
+        self.price_entry.grid(row=3, column=1, padx=5, pady=5)
+
+        # Buttons
+        self.add_shipment_button = tk.Button(action_frame, text="Add Shipment", command=self.add_shipment)
+        self.add_shipment_button.grid(row=3, column=2, columnspan=2, padx=5, pady=5, sticky="ew")
+
+    def add_shipment(self):
+        product = self.product_var_shipment.get()
+        batch = self.batch_var_shipment.get()
+        total_quantity = self.total_quantity_var.get()
+        shipment_location = self.shipment_location_var.get()
+        shipment_date = self.shipment_date_var.get()
+        sell_by_date = self.sell_by_date_var.get()
+        price = self.price_var.get()
+
+        if product and batch and total_quantity and shipment_location and shipment_date and sell_by_date and price:
+            if product in self.inventory:
+                self.inventory[product]["quantity"] -= total_quantity
+                self.inventory_tree.set(product, "Quantity", self.inventory[product]["quantity"])
+                self.crop_shipment_tree.insert("", "end", text=product, values=(batch, total_quantity, shipment_location, shipment_date, sell_by_date, price))
+                messagebox.showinfo("Success", f"Shipment added for {product}.")
             else:
                 messagebox.showerror("Error", f"{product} not found in inventory.")
         else:
