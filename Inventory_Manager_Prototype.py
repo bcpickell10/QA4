@@ -10,9 +10,9 @@ class InventoryManagementApp:
         
         # Inventory data
         self.inventory = {
-            "Tomatoes": {"quantity": 100, "batch": "Batch 001", "purchase_date": "2024-04-24", "expiry_date": "2024-05-15"},
-            "Apples": {"quantity": 80, "batch": "Batch 002", "purchase_date": "2024-04-20", "expiry_date": "2024-05-10"},
-            "Lettuce": {"quantity": 50, "batch": "Batch 001", "purchase_date": "2024-04-22", "expiry_date": "2024-05-12"}
+            "Tomatoes": {"quantity": 100, "batch": "Batch 001", "purchase_date": "2024-04-24", "expiry_date": "2024-05-15", "upc": "123456789012"},
+            "Apples": {"quantity": 80, "batch": "Batch 002", "purchase_date": "2024-04-20", "expiry_date": "2024-05-10", "upc": "123456789013"},
+            "Lettuce": {"quantity": 50, "batch": "Batch 001", "purchase_date": "2024-04-22", "expiry_date": "2024-05-12", "upc": "123456789014"}
         }
         
         # Sales data
@@ -38,16 +38,17 @@ class InventoryManagementApp:
         
     def create_inventory_tab(self):
         # Treeview for inventory
-        self.inventory_tree = ttk.Treeview(self.tab1, columns=("Quantity", "Batch", "Purchase Date", "Expiry Date"))
+        self.inventory_tree = ttk.Treeview(self.tab1, columns=("Quantity", "Batch", "Purchase Date", "Expiry Date", "UPC"))
         self.inventory_tree.heading("#0", text="Product")
         self.inventory_tree.heading("Quantity", text="Quantity")
         self.inventory_tree.heading("Batch", text="Batch")
         self.inventory_tree.heading("Purchase Date", text="Purchase Date")
         self.inventory_tree.heading("Expiry Date", text="Expiry Date")
+        self.inventory_tree.heading("UPC", text="UPC")
 
         # Inserting inventory data into the treeview
         for product, data in self.inventory.items():
-            self.inventory_tree.insert("", "end", text=product, values=(data["quantity"], data["batch"], data["purchase_date"], data["expiry_date"]))
+            self.inventory_tree.insert("", "end", text=product, values=(data["quantity"], data["batch"], data["purchase_date"], data["expiry_date"], data["upc"]))
         
         self.inventory_tree.pack(expand=True, fill="both")
 
@@ -86,9 +87,15 @@ class InventoryManagementApp:
         self.expiry_date_entry = tk.Entry(action_frame, textvariable=self.expiry_date_var)
         self.expiry_date_entry.grid(row=2, column=1, padx=5, pady=5)
 
+        self.upc_label = tk.Label(action_frame, text="UPC:")
+        self.upc_label.grid(row=2, column=2, padx=5, pady=5)
+        self.upc_var = tk.StringVar()
+        self.upc_entry = tk.Entry(action_frame, textvariable=self.upc_var)
+        self.upc_entry.grid(row=2, column=3, padx=5, pady=5)
+
         # Buttons
         self.add_button = tk.Button(action_frame, text="Add to Inventory", command=self.add_to_inventory)
-        self.add_button.grid(row=2, column=2, columnspan=2, padx=5, pady=5, sticky="ew")
+        self.add_button.grid(row=3, column=0, columnspan=4, padx=5, pady=5, sticky="ew")
 
     def add_to_inventory(self):
         product = self.product_var.get()
@@ -96,11 +103,12 @@ class InventoryManagementApp:
         batch = self.batch_var.get()
         purchase_date = self.purchase_date_var.get()
         expiry_date = self.expiry_date_var.get()
+        upc = self.upc_var.get()
 
-        if product and quantity and batch and purchase_date and expiry_date:
+        if product and quantity and batch and purchase_date and expiry_date and upc:
             if product not in self.inventory:
-                self.inventory[product] = {"quantity": quantity, "batch": batch, "purchase_date": purchase_date, "expiry_date": expiry_date}
-                self.inventory_tree.insert("", "end", text=product, values=(quantity, batch, purchase_date, expiry_date))
+                self.inventory[product] = {"quantity": quantity, "batch": batch, "purchase_date": purchase_date, "expiry_date": expiry_date, "upc": upc}
+                self.inventory_tree.insert("", "end", text=product, values=(quantity, batch, purchase_date, expiry_date, upc))
             else:
                 self.inventory[product]["quantity"] += quantity
                 self.inventory_tree.set(product, "Quantity", self.inventory[product]["quantity"])
@@ -126,8 +134,8 @@ class InventoryManagementApp:
         action_frame.pack(pady=10)
 
         # Labels and Entry fields
-        self.product_label = tk.Label(action_frame, text="Product:")
-        self.product_label.grid(row=0, column=0, padx=5, pady=5)
+        self.product_label_sales = tk.Label(action_frame, text="Product:")
+        self.product_label_sales.grid(row=0, column=0, padx=5, pady=5)
         self.product_var_sales = tk.StringVar()
         self.product_entry_sales = tk.Entry(action_frame, textvariable=self.product_var_sales)
         self.product_entry_sales.grid(row=0, column=1, padx=5, pady=5)
